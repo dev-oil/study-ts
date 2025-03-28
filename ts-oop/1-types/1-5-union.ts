@@ -33,4 +33,15 @@
       },
     };
   }
+
+  // printLoginState(state: LoginState)
+  // success -> body
+  // fail -> reason
+  function printLoginState(state: LoginState) {
+    if ('response' in state) {
+      console.log(`🎉 ${state.response.body}`);
+    } else {
+      console.log(`😭 ${state.reason}`);
+    }
+  }
 }
