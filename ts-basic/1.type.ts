@@ -60,9 +60,284 @@ const student: Student = {
   course: 'TypeScript',
 };
 
+type Author = {
+  name: string;
+  books: { title: string; year: number }[]; // 객체 배열
+};
+
+// 중첩된 객체 타입
+const author: Author = {
+  name: 'dev-oil',
+  books: [
+    {
+      title: '타입스크립트',
+      year: 2025,
+    },
+    {
+      title: '리액트',
+      year: 2024,
+    },
+  ],
+};
+
+console.log(author.books[0].title); // 타입스크립트
+
+// 선택적 속성
+type User = {
+  name: string;
+  age?: number;
+};
+
+const user: User = {
+  name: 'oil',
+};
+
+console.log(user.age); // undefined
+user.age = 30;
+console.log(user);
+
+// 읽기 전용 속성
+type Car = {
+  readonly brand: string; // 이 속성은 못바꿈
+  year: number;
+};
+
+const car: Car = {
+  brand: 'kia',
+  year: 2025,
+};
+
+// car.brand = '대우'; // 컴파일 실행 시 오류 !
+
+console.log(car);
+
+// 객체의 타입과 함수 결합
+type Person = {
+  name: string;
+  greet(): string;
+};
+
+const person = {
+  name: 'oil',
+  greet() {
+    return `안녕하세요 ${this.name}`;
+  },
+};
+
+console.log(person.greet());
+
 // 튜플 : 요소의 타입을 고정
 const tuple: [string, number, boolean] = ['lee', 40, true];
 
 // 튜플을 이용한 리턴값
 const getPerson = (): [string, number] => ['park', 30];
 console.log(getPerson());
+
+// 인터페이스 : 본질 : 타입 (클래스도 타입)
+interface Book {
+  title: string;
+  author: string;
+  year: number;
+}
+
+const myBook: Book = {
+  title: 'functional programming',
+  author: 'devdevdev',
+  year: 2025,
+};
+
+console.log(myBook.title);
+
+// 선택적 속성
+type NewUser = {
+  readonly username: string;
+  email?: string;
+};
+
+const newUser: NewUser = {
+  username: 'ooo',
+};
+
+console.log(newUser.username); // ooo
+newUser.email = 'ooo@gmail.com';
+// newUser.username = 'good';
+console.log(newUser);
+
+// 인터페이스로 함수 타입 정의
+interface MyCal {
+  plus(a: number, b: number): number;
+  minus(a: number, b: number): number;
+  multiply(a: number, b: number): number;
+}
+
+// type MyCal = {
+//   plus: (a: number, b: number) => number;
+//   minus: (a: number, b: number) => number;
+//   multiply: (a: number, b: number) => number;
+// };
+
+const myCal: MyCal = {
+  plus(a, b) {
+    return a + b;
+  },
+  minus(a, b) {
+    return a - b;
+  },
+  multiply(a, b) {
+    return a * b;
+  },
+};
+
+console.clear();
+
+// 인터페이스끼리 상속 + class
+interface People {
+  name: string;
+  age: number;
+}
+
+interface Emp extends People {
+  empId: number;
+}
+
+// 기본 객체 사용에서
+// const emp: Emp = {
+//   name: 'jennie', // who ~ wanna rock with jennie ~~
+//   age: 30,
+//   empId: 12345,
+// };
+
+// console.log(emp.name);
+
+// class에서
+class CompanyEmp implements Emp {
+  // 인터페이스는 새로운 구현
+  name: string;
+  age: number;
+  empId: number;
+
+  constructor(name: string, age: number, empId: number) {
+    this.name = name;
+    this.age = age;
+    this.empId = empId;
+  }
+
+  introduce() {
+    return `저는 ${this.name}, 사번은 ${this.empId}입니다.`;
+  }
+}
+
+const emp1 = new CompanyEmp('jennie', 30, 12345);
+const emp2 = new CompanyEmp('jennie', 30, 12345);
+const emp3 = new CompanyEmp('jennie', 30, 12345);
+
+console.log(emp1.name);
+console.log(emp1.introduce());
+
+// 그럼 기본 객체에서 사용하는거랑 클래스랑 어떤 차이임?
+// 객체 리터럴로 생성 시 하나의 인스턴스만 생성 가능
+// 클래스는 new 생성자로 여러개를 만들어 줄 수 있음 (하나하나 지정해 줄 필요 없이)
+
+// 열거형과 Union 타입
+// 열거형
+// 특정 값의 집합을 나타내고 싶을 때 (ex. 동 서 남 북 / 주문상태, 처리상태 / 유저 역할 구분)
+enum Direction {
+  Up = 'Up',
+  Down = 'Down',
+  Left = 'Left',
+  Right = 'Right',
+}
+
+// console.log(Direction.Up); // 0
+// console.log(Direction[0]); // Up
+
+class Character {
+  x: number = 0;
+  y: number = 0;
+
+  getPosition() {
+    return { x: this.x, y: this.y };
+  }
+
+  move(direction: Direction) {
+    switch (direction) {
+      case Direction.Up:
+        this.y--;
+        break;
+      case Direction.Down:
+        this.y++;
+        break;
+      case Direction.Left:
+        this.x--;
+        break;
+      case Direction.Right:
+        this.x++;
+        break;
+    }
+    console.log(`Moved ${Direction[direction]}`); // 그냥 direction 이면 0 나옴
+  }
+}
+const character = new Character();
+
+character.move(Direction.Down);
+console.log(character.getPosition());
+character.move(Direction.Right);
+console.log(character.getPosition());
+
+console.log(Direction.Up);
+
+// any 타입
+// 아무거나 타입 (타입 체크 안하겠다) 최대한 쓰지 않기로 ~~
+// let anyVal: any = 100;
+// anyVal = '100';
+
+// console.log(anyVal);
+
+// 유니온 타입
+// 두가지 이상의 타입을 지정할 때
+// 공용체(union)
+type Union = number | string;
+
+let uni: Union = 100;
+uni = 'happy';
+// uni = true;
+
+function printId(id: string | number): void {
+  console.log(`your id is : ${typeof id === 'string' ? id.toUpperCase() : id}`);
+}
+
+console.log(printId(123));
+console.log(printId('abc'));
+
+console.clear();
+
+const getLength = (value: string | string[]): number => value.length;
+
+console.log(getLength('hello'));
+console.log(getLength(['d', 'w', 'a']));
+
+// 유니온 타입과 배열
+let values: (number | string)[] = [1, 2, '💭', 4, 5, '2'];
+
+values.push(2);
+values.push('D');
+// values.push(true); 안되어.요
+
+// 객체 속성에 유니온 타입 사용
+type Human = {
+  name: string;
+  age: number | string;
+};
+
+const human1: Human = {
+  name: 'yoyo',
+  age: 30,
+};
+
+const human2: Human = {
+  name: 'hoho',
+  age: '비밀',
+};
+
+console.log(human1);
+console.log(human2);
