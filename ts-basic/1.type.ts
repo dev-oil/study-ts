@@ -341,3 +341,171 @@ const human2: Human = {
 
 console.log(human1);
 console.log(human2);
+
+// 타입 재정의
+// #define, #typedef
+
+// 타입 별칭
+// type 이름 = 타입 or 타입들의 조합
+
+console.clear();
+
+// 객체 타입 별칭
+type ID = string | number;
+
+let userId: ID;
+
+userId = '1234';
+userId = 12;
+
+type UserType = {
+  name: string;
+  age: number;
+  email?: string;
+};
+
+const user1: UserType = {
+  name: 'james',
+  age: 19,
+  email: 'james@mail.com',
+};
+
+const user2: UserType = {
+  name: 'gou',
+  age: 21,
+};
+
+console.log(user1);
+console.log(user2);
+
+// 함수 타입 별칭
+type Operation = (x: number, y: number) => number;
+
+const plus: Operation = (x, y) => x + y;
+const minus: Operation = (x, y) => x - y;
+
+console.log(plus(3, 2));
+console.log(minus(3, 2));
+
+// 타입 별칭과 인터페이스 결합
+type MyLocation = {
+  country: string;
+  city: string;
+  zipCode: string;
+};
+
+interface Company {
+  name: string;
+  employees: number;
+  location: MyLocation;
+}
+
+const company: Company = {
+  name: '코스타',
+  employees: 15,
+  location: {
+    country: '대한민국',
+    city: '서울',
+    zipCode: '12345',
+  },
+};
+
+console.log(company);
+
+// 리터럴 타입 : 특정값만 가질 수 있도록 제한된 타입
+// 문자열 리터럴, 숫자 리터럴, 불리언 리터럴
+
+type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+
+const sendRequest = (method: RequestMethod): void => {
+  console.log(`Sending a ${method} request.`);
+};
+
+console.log(sendRequest('GET'));
+// console.log(sendRequest('Fetch'));
+
+type DiceRoll = 1 | 2 | 3 | 4 | 5 | 6;
+
+const rollDice = (): DiceRoll => {
+  const result = Math.floor(Math.random() * 6 + 1) as DiceRoll;
+
+  return result;
+};
+
+console.log(rollDice());
+
+console.clear();
+
+// 불리언 리터럴 타입
+type isActive = true | false;
+
+const toggle = (active: isActive) => {
+  if (active) {
+    console.log('불켜짐');
+  } else {
+    console.log('불꺼짐');
+  }
+};
+
+toggle(true);
+
+// 리터럴 타입을 활용한 함수 오버로딩
+function getStatus(code: 200): 'Success';
+function getStatus(code: 404): 'Not Found';
+function getStatus(code: 500): 'Server Error';
+
+function getStatus(code: number): string {
+  switch (code) {
+    case 200:
+      return 'Success';
+    case 404:
+      return 'Not Found';
+    case 500:
+      return 'Server Error';
+    default:
+      return 'Unknown Status';
+  }
+}
+
+console.log(getStatus(200));
+
+// 타입 가드! (타입의 예외처리)
+type PrintType = string | number;
+
+const printValue = (value: PrintType) => {
+  if (typeof value === 'string') {
+    console.log(`string ${value}`);
+  } else {
+    console.log(`number ${value}`);
+  }
+};
+
+printValue('타입스크립트영');
+printValue(100);
+
+// instanceof
+class Dog {
+  bark() {
+    console.log('멍멍 주인님');
+  }
+}
+
+class Cat {
+  meow() {
+    console.log('이봐, 김집사.');
+  }
+}
+
+const makeSound = (pet: Dog | Cat) => {
+  if (pet instanceof Dog) {
+    pet.bark();
+  } else {
+    pet.meow();
+  }
+};
+
+const dog = new Dog();
+const cat = new Cat();
+
+makeSound(dog);
+makeSound(cat);
